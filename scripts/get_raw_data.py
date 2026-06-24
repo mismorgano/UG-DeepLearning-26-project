@@ -5,7 +5,7 @@ from io import BytesIO
 from pathlib import Path
 from zipfile import ZipFile
 
-from src.config import data_dir, data_url
+from configs.config import data_dir, data_url
 
 # configure logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
