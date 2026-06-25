@@ -3,10 +3,11 @@ import pathlib
 import random
 from pathlib import Path
 
-import torchvision.transforms as transforms
+import torch
 import torchvision.transforms.functional as TF
 from torch.utils.data import DataLoader, Dataset
 from torchvision.io import decode_image
+from torchvision.transforms import v2
 
 # ── Dataset split ─────────────────────────────────────────────────────────────
 TRAIN_SIZE = 220
@@ -14,11 +15,11 @@ TEST_SIZE = 80
 TRAIN_CROP = 128  # spatial size used during training
 NATIVE_SIZE = 512  # full resolution used for testing
 
-base_transform = transforms.Compose(
+base_transform = v2.Compose(
     [
-        transforms.Resize((512, 512)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+        v2.Resize((NATIVE_SIZE, NATIVE_SIZE)),
+        v2.ToDtype(dtype=torch.float32, scale=True),
+        v2.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
     ]
 )
 
@@ -104,4 +105,4 @@ class Pix2PixPatchDataset(Dataset):
             target_tensor, top, left, self.patch_size, self.patch_size
         )
 
-        return input_patch, target_patch
+        return input_patch, target_patch, img_name
