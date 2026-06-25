@@ -79,7 +79,7 @@ def split_filenames(
         split_index = train_size
     elif test_size is not None:
         assert test_size < dataset_size
-        split_index = test_size
+        split_index = dataset_size - test_size
     else:
         split_index = int(len(shuffled) * ratio)
 
