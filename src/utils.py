@@ -70,18 +70,12 @@ def split_filenames(
     rng.shuffle(shuffled)
 
     # check how many "size" parameters were provided
-    size_args = [train_size, test_size, ratio]
-    count = sum(1 for arg in size_args if arg is not None)
-
-    # force only one argument is used
-    if count != 1:
-        raise TypeError('You must only provide one "size" argument.')
-
+    only_one_argument_required(train_size=train_size, test_size=test_size, ratio=ratio)
 
     dataset_size = len(filenames)
 
     if train_size is not None:
-        assert train_size < dataset_size,
+        assert train_size < dataset_size
         split_index = train_size
     elif test_size is not None:
         assert test_size < dataset_size
@@ -93,3 +87,14 @@ def split_filenames(
     test_files = shuffled[split_index:]
 
     return train_files, test_files
+
+
+def only_one_argument_required(**kargs):
+    count = sum(1 for arg in kargs.values() if arg is not None)
+    if count != 1:
+        raise TypeError(
+            f'You must provide exactly one "size" argument. \nYou provided: {count}.'
+        )
+    for key, value in kargs.items():
+        if value is not None:
+            return key, value

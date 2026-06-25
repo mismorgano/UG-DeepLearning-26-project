@@ -147,6 +147,8 @@ class DenoisingDataset(Dataset):
         patch_size: Side length (pixels) of square patches. Default ``128``.
         seed:       Random seed used for deterministic train/test splitting.
                     Default ``42``.
+        **kargs:    Named arguments, train_size, test_size, ratio to handle the dataset split.
+                    Exactly one of them must be specified.
 
     Returns (per ``__getitem__`` call):
         A tuple ``(noisy_tensor, clean_tensor)`` where each tensor has shape
@@ -162,6 +164,7 @@ class DenoisingDataset(Dataset):
         split: str,
         patch_size: int = 128,
         seed: int = 42,
+        **kargs,
     ) -> None:
         super().__init__()
 
@@ -192,7 +195,7 @@ class DenoisingDataset(Dataset):
         if len(all_filenames) == 0:
             raise RuntimeError(f"No valid images found in '{self.clean_dir}'.")
 
-        train_files, test_files = split_filenames(all_filenames, seed=seed)
+        train_files, test_files = split_filenames(all_filenames, seed=seed, **kargs)
 
         # Keep only the subset relevant to this split
         self.filenames: List[str] = train_files if split == "train" else test_files
